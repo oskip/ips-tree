@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <link rel="stylesheet" href="bower_components/normalize-css/normalize.css"/>
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
+  <!-- Angular -->
+  <script src="bower_components/angular/angular.js"></script>
+  <!-- Dagre d3 -->
+  <script src="bower_components/lodash/lodash.min.js"></script>
+  <script src="bower_components/graphlib/dist/graphlib.core.js"></script>
+  <script src="bower_components/dagre/dist/dagre.core.js"></script>
+  <script src="bower_components/d3/d3.js"></script>
+  <script src="bower_components/dagre-d3/dist/dagre-d3.core.js"></script>
+</head>
+<body ng-app="app">
+<div class="graph-editor" ng-controller="GraphCtrl">
+  {{ 1+1 }}
+  <svg>
+    <g/>
+  </svg>
+
+</div>
+</body>
+<script>
+  var data = {
+    nodes: {
+      1: {
+        name: "Przyjęte zgłoszenie",
+        type: "STANDARD"
+      },
+      2: {
+        name: "Anulowane",
+        type: "ENDING"
+      },
+      3: {
+        name: "Rejestracja",
+        type: "ENDING"
+      },
+      5: {
+        name: "Przekazane"
+      },
+      6: {
+        name: "Dodaj strefę"
+      },
+      7: {
+        name: "Przyjęte"
+      },
+      8: {
+        name: "Akceptacja strefy"
+      },
+      9: {
+        name: "Realizacja"
+      }
+    },
+    edges: {
+      1: {
+        from: 1,
+        to: 2,
+        role: "Helpdesk BP"
+      },
+      2: {
+        from: 1,
+        to: 3,
+        role: "Helpdesk BP"
+      },
+      3: {
+        from: 3,
+        to: 1,
+        role: "Helpdesk BP"
+      },
+      4: {
+        from: 3,
+        to: 5,
+        role: "Helpdesk BP"
+      },
+      5: {
+        from: 3,
+        to: 6,
+        role: "Helpdesk BP"
+      },
+      6: {
+        from: 3,
+        to: 6,
+        role: "Helpdesk BP"
+      },
+      7: {
+        from: 5,
+        to: 7,
+        role: "Helpdesk BP"
+      },
+      8: {
+        from: 5,
+        to: 2,
+        role: "Helpdesk BP"
+      },
+      9: {
+        from: 5,
+        to: 8,
+        role: "Helpdesk BP"
+      },
+      10: {
+        from: 7,
+        to: 9,
+        role: "Helpdesk BP"
+      },
+      11: {
+        from: 8,
+        to: 5,
+        role: "Helpdesk BP"
+      },
+      12: {
+        from: 8,
+        to: 2,
+        role: "Helpdesk BP"
+      },
+      13: {
+        from: 6,
+        to: 8,
+        role: "Helpdesk KS"
+      },
+      14: {
+        from: 3,
+        to: 2,
+        role: "Helpdesk KS"
+      }
+    }
+  };
+
+  var svg = d3.select("svg"), inner = svg.select("g"),
+  // Zoom support
+        zoom = d3.behavior.zoom().on("zoom", function () {
+          inner.attr("transform", "translate(" + d3.event.translate + ")" +
+                "scale(" + d3.event.scale + ")");
+        });
+  svg.call(zoom);
+
+  // Graph setup
+  var render = new dagreD3.render();
+  var graph = new dagreD3.graphlib.Graph({multigraph: true});
+  graph.setGraph({
+    rankdir: 'lr'
+  });
+
+  function updateGraph() {
+    if (!graph) return;
+    // Deleting nodes not in data
+    graph.nodes().forEach(function (index) {
+      if (!data.nodes.hasOwnProperty(index)) {
+        graph.removeNode(index);
+        console.log("deleting node " + index + " form graph");
+      }
+    });
+
+    // Deleting edges not in data
+    graph.edges().forEach(function (edge) {
+      if (!data.edges.hasOwnProperty(edge.name)) {
+        graph.removeEdge(edge);
+        console.log("deleting edge " + edge.name + " from graph");
+      }
+    })
+  }
+  //
+  function draw() {
+    // Add or update nodes
+    for (var index in data.nodes) {
+      if (data.nodes.hasOwnProperty(index)) {
+        var node = data.nodes[index];
+
+        var html = "<div class=\"node-body\" data-id=\"" + index + "\">";
+        html += "<span class=\"title\">" + node.name + "</span>";
+        html += "</div>";
+
+        graph.setNode(index, {
+          labelType: "html",
+          label: html
+        });
+      }
+    }
+
+    // Add or update edges
+    for (var index in data.edges) {
+      if (data.edges.hasOwnProperty(index)) {
+        var edge = data.edges[index];
+
+        if (graph.hasNode(edge.from) && graph.hasNode(edge.to)) {
+          graph.setEdge(edge.from, edge.to, {
+            width: 40,
+            lineInterpolate: 'basis'
+          }, index);
+        }
+      }
+    }
+    updateGraph();
+    inner.call(render, graph);
+    appendEvents();
+  }
+
+
+  function appendEvents() {
+    svg.selectAll(".node")
+          .on("click", function (id) {
+            selectElement(id);
+          });
+  }
+
+  function selectElement(id) {
+    svg.selectAll(".node")
+          .filter(function (d) {
+            if (d == id) return true;
+          })
+          .each(function (id) {
+//            d3.select(this).style("display", "none");
+            delete data.nodes[id]
+            draw();
+          });
+  }
+
+  // DO EET!
+  draw();
+
+  // Angular code
+  angular.module("app", []);
+
+  angular.module("app")
+        .controller("GraphCtrl", GraphCtrl)
+        .run(function ($q) {
+
+          var timeout = function (wait) {
+            var q = $q.defer();
+            setTimeout(function () {
+              q.resolve();
+            }, wait);
+            return q.promise;
+          };
+        });
+
+  function GraphCtrl($q) {
+  }
+
+</script>
+<style>
+  .graph-editor .edgePath path {
+    stroke: #999;
+    stroke-width: 1.5px;
+    fill: #999;
+  }
+
+  body {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  svg {
+    width: 100%;
+    height: 100%;
+    border: 1px grey solid;
+    overflow: hidden;
+  }
+
+  .graph-editor {
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+</html>
