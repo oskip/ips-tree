@@ -1,0 +1,98 @@
+{
+  "nodes": {
+    "1": {
+      "name": "Przyjęte zgłoszenie",
+      "type": "STANDARD"
+    },
+    "2": {
+      "name": "Anulowane",
+      "type": "ENDING"
+    },
+    "3": {
+      "name": "Rejestracja",
+      "type": "ENDING"
+    },
+    "5": {
+      "name": "Przekazane"
+    },
+    "6": {
+      "name": "Dodaj strefę"
+    },
+    "7": {
+      "name": "Przyjęte"
+    },
+    "8": {
+      "name": "Akceptacja strefy"
+    },
+    "9": {
+      "name": "Realizacja"
+    }
+  },
+  "edges": {
+    "1": {
+      "from": 1,
+      "to": 2,
+      "role": "Helpdesk BP"
+    },
+    "2": {
+      "from": 1,
+      "to": 3,
+      "role": "Helpdesk BP"
+    },
+    "3": {
+      "from": 3,
+      "to": 1,
+      "role": "Helpdesk BP"
+    },
+    "4": {
+      "from": 3,
+      "to": 5,
+      "role": "Helpdesk BP"
+    },
+    "5": {
+      "from": 3,
+      "to": 6,
+      "role": "Helpdesk BP"
+    },
+    "7": {
+      "from": 5,
+      "to": 7,
+      "role": "Helpdesk BP"
+    },
+    "8": {
+      "from": 5,
+      "to": 2,
+      "role": "Helpdesk BP"
+    },
+    "9": {
+      "from": 5,
+      "to": 8,
+      "role": "Helpdesk BP"
+    },
+    "10": {
+      "from": 7,
+      "to": 9,
+      "role": "Helpdesk BP"
+    },
+    "11": {
+      "from": 8,
+      "to": 5,
+      "role": "Helpdesk BP"
+    },
+    "12": {
+      "from": 8,
+      "to": 2,
+      "role": "Helpdesk BP"
+    },
+    "13": {
+      "from": 6,
+      "to": 8,
+      "role": "Helpdesk KS"
+    },
+    "14": {
+      "from": 3,
+      "to": 2,
+      "role": "Helpdesk KS"
+    }
+  }
+}
