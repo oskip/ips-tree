@@ -12,14 +12,27 @@ function GraphDirective(bus) {
             var graph = d3.dataGraph();
             var container = angular.element(document.getElementById("graph-editor"));
 
+            // Pass events to Angular's bus
             container.on(Events.nodeSelected, function(data) {
-                //Obsługa tutaj lub na bus.emit
-                console.log("hura, to element "+JSON.stringify(data.detail));
+                bus.emit(Events.nodeSelected, data.detail);
             });
 
-            bus.on(Events.dataLoaded, function(data) {
-                d3.dataGraph().setData(data);
+            container.on(Events.nodeUnselected, function(data) {
+                bus.emit(Events.nodeUnselected);
             });
+
+            // Pass events from Angular's bus
+            bus.on(Events.dataLoaded, function(data) {
+                graph.setData(data);
+            });
+
+            bus.on(Events.dataUpdated, function(data) {
+                graph.setData(data);
+            });
+
+            bus.on(Events.unselectNode, function() {
+                graph.unselectNode();
+            })
         }
 
     }

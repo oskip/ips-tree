@@ -4,5 +4,7 @@
 var Events = {
     nodeSelected: "nodeSelected",
     dataLoaded: "dataLoaded",
-    dataUpdated: "dataUpdated"
+    dataUpdated: "dataUpdated",
+    unselectNode: "unselectNode",
+    nodeUnselected: "nodeUnselected"
 };

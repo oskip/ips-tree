@@ -83,13 +83,14 @@ d3.dataGraph = function () {
     function appendEvents() {
         svg.selectAll(".node")
             .on("click", function (id) {
-                selectElement(id);
+                if (selectedElementId === id)
+                    unselectNode(true);
+                else
+                    selectNode(id);
             });
     }
 
-    function selectElement(id) {
-        if (selectedElementId === id) return;
-
+    function selectNode(id) {
         selectedElementId = id;
         // Fade in and fade out
         svg.selectAll(".node")
@@ -112,12 +113,38 @@ d3.dataGraph = function () {
             new CustomEvent(Events.nodeSelected, {"detail": id})
         );
     }
+
+    function unselectNode(dispatch) {
+        selectedElementId = null;
+
+        svg.selectAll(".node")
+            .each(function () {
+                d3.select(this)
+                    .transition()
+                    .duration(300)
+                    .style("opacity", 1);
+            });
+        if (dispatch) {
+            // Emit event
+            document.getElementById("graph-editor").dispatchEvent(
+                new CustomEvent(Events.nodeUnselected, {})
+            );
+        }
+    }
+
     var dataGraph = {};
 
-    dataGraph.setData = function(d) {
+    dataGraph.setData = function (d) {
         data = d;
         draw();
+        // Not emmiting because dataUpdated must've been called anyway
+        unselectNode(false);
         return dataGraph;
+    };
+
+    // Called from outside, don't dispatch
+    dataGraph.unselectNode = function() {
+        unselectNode(false);
     };
 
     return dataGraph;

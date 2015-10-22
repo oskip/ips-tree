@@ -18,17 +18,25 @@
   <!-- App -->
   <script src="js/app.js"></script>
   <script src="js/d3.dataGraph.js"></script>
-  <script src="js/directives/graph.js"></script>
   <script src="js/services/bus.js"></script>
+  <script src="js/services/data.js"></script>
+  <script src="js/controllers/panelCtrl.js"></script>
+  <script src="js/directives/graph.js"></script>
   <script src="js/utils/enums.js"></script>
 </head>
 <body ng-app="graphEditor">
 <div id="graph-editor">
-  <graph>
-    <svg>
-      <g/>
-    </svg>
-  </graph>
+  <div class="container-fluid">
+    <div class="row" ng-controller="PanelCtrl">
+      <button type="button" ng-if="editMode" ng-click="deleteNode()" class="btn btn-danger"><span
+            class="glyphicon glyphicon-trash"></span></button>
+    </div>
+    <graph>
+      <svg>
+        <g/>
+      </svg>
+    </graph>
+  </div>
 </div>
 </body>
 </html>

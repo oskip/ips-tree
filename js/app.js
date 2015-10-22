@@ -12,6 +12,7 @@ angular.module("graphEditor")
             }, wait);
             return q.promise;
         };
+        //TODO: do serwisu
         $http.get("data.json").success(function(data) {
             bus.emit(Events.dataLoaded, data);
         });
