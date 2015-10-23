@@ -21,6 +21,9 @@ d3.dataGraph = function () {
     graph.setGraph({
         rankdir: 'lr'
     });
+    graph.graph().transition = function(selection) {
+        return selection.transition().duration(500);
+    };
 
     var selectedElementId;
 
@@ -40,7 +43,7 @@ d3.dataGraph = function () {
                 graph.removeEdge(edge);
                 console.log("deleting edge " + edge.name + " from graph");
             }
-        })
+        });
     }
 
     function draw() {
@@ -54,6 +57,8 @@ d3.dataGraph = function () {
                 html += "</div>";
 
                 graph.setNode(index, {
+                    rx: 4,
+                    ry: 4,
                     labelType: "html",
                     label: html
                 });
@@ -65,8 +70,8 @@ d3.dataGraph = function () {
             if (data.edges.hasOwnProperty(index)) {
                 var edge = data.edges[index];
 
-                if (graph.hasNode(edge.from) && graph.hasNode(edge.to)) {
-                    graph.setEdge(edge.from, edge.to, {
+                if (graph.hasNode(edge.v) && graph.hasNode(edge.w)) {
+                    graph.setEdge(edge.v, edge.w, {
                         width: 40,
                         lineInterpolate: 'basis'
                     }, index);
@@ -75,10 +80,10 @@ d3.dataGraph = function () {
         }
         // Remove edges and nodes not in data
         updateGraph();
+
         inner.call(render, graph);
         appendEvents();
     }
-
 
     function appendEvents() {
         svg.selectAll(".node")
@@ -137,8 +142,8 @@ d3.dataGraph = function () {
     dataGraph.setData = function (d) {
         data = d;
         draw();
-        // Not emmiting because dataUpdated must've been called anyway
-        unselectNode(false);
+        // No node selected after redraw
+        selectedElementId = null;
         return dataGraph;
     };
 

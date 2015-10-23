@@ -12,6 +12,9 @@ function DataService(bus) {
     this.deleteNode = function (index) {
         //TODO: Sprawdzanie czy jest
         delete data.nodes[index];
+        _.without(data.edges, function(edge) {
+            return edge.v === index || edge.w === index;
+        });
         bus.emit(Events.dataUpdated, data);
     };
     this.getNode = function(index) {
