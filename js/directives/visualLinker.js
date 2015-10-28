@@ -4,14 +4,13 @@
 angular.module("graphEditor")
     .directive("visualLinker", VisualLinker);
 
-function VisualLinker(bus) {
+function VisualLinker() {
 
     return {
         restrict: "A",
         replace: false,
         link: function (scope, element) {
 
-            //TODO: Implementacja
             angular.element(element).append('<line id="linker-line" ' +
                 'x1="'+scope.arrowStartX+'" ' +
                 'y1="'+scope.arrowStartY+'" ' +
@@ -19,7 +18,7 @@ function VisualLinker(bus) {
                 'y2="'+scope.arrowStartY+'" ' + //TODO: Grot strzałki
                 '/>');
 
-            //http://stackoverflow.com/questions/3642035/jquerys-append-not-working-with-svg-element
+            // http://stackoverflow.com/questions/3642035/jquerys-append-not-working-with-svg-element
             var svgEl = document.getElementById('linker-overlay');
             angular.element(svgEl).html(angular.element(svgEl).html());
 

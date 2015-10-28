@@ -3,11 +3,16 @@
  */
 
 d3 = d3 || {};
+var ANIMATION_TIME = 500;
 
 d3.dataGraph = function () {
+    // Variables
     var data = {};
-
+    var selectedElementId;
+    var isSelectingEffectActive = true;
+    var animationInProgress = false;
     var svg = d3.select("svg#editor-canvas"), inner = svg.select("g#inner");
+
     // Zoom support
     zoom = d3.behavior.zoom().on("zoom", function () {
         inner.attr("transform", "translate(" + d3.event.translate + ")" +
@@ -22,11 +27,8 @@ d3.dataGraph = function () {
         rankdir: 'lr'
     });
     graph.graph().transition = function (selection) {
-        return selection.transition().duration(500);
+        return selection.transition().duration(ANIMATION_TIME);
     };
-
-    var selectedElementId;
-    var isSelectingEffectActive = true;
 
     function updateGraph() {
         if (!graph) return;
@@ -83,16 +85,29 @@ d3.dataGraph = function () {
         updateGraph();
 
         inner.call(render, graph);
+        animationInProgress = true;
+        setTimeout(function() {
+            animationInProgress = false;
+        }, ANIMATION_TIME);
+
         appendEvents();
     }
 
     function appendEvents() {
         svg.selectAll(".node")
             .on("click", function (id) {
-                if (selectedElementId === id)
-                    unselectNode(true);
-                else
-                    selectNode(id);
+                if (selectedElementId === id) {
+                    // Emit event
+                    document.getElementById("graph-editor").dispatchEvent(
+                        new CustomEvent(Events.nodeUnselected, {})
+                    );
+                }
+                else {
+                    // Emit event
+                    document.getElementById("graph-editor").dispatchEvent(
+                        new CustomEvent(Events.nodeSelected, {"detail": id})
+                    );
+                }
             });
     }
 
@@ -101,8 +116,6 @@ d3.dataGraph = function () {
         // Fade in and fade out
         svg.selectAll(".node")
             .each(function (elId) {
-                if (!isSelectingEffectActive) return;
-
                 if (id != elId) {
                     d3.select(this)
                         .transition()
@@ -116,10 +129,6 @@ d3.dataGraph = function () {
                         .style("opacity", 1);
                 }
             });
-        // Emit event
-        document.getElementById("graph-editor").dispatchEvent(
-            new CustomEvent(Events.nodeSelected, {"detail": id})
-        );
     }
 
     function unselectNode() {
@@ -132,10 +141,6 @@ d3.dataGraph = function () {
                     .duration(300)
                     .style("opacity", 1);
             });
-        // Emit event
-        document.getElementById("graph-editor").dispatchEvent(
-            new CustomEvent(Events.nodeUnselected, {})
-        );
     }
 
     function getRectOfNode(id) {
@@ -149,6 +154,7 @@ d3.dataGraph = function () {
 
     var dataGraph = {};
 
+    // Bound data
     dataGraph.setData = function (d) {
         data = d;
         draw();
@@ -157,23 +163,38 @@ d3.dataGraph = function () {
         return dataGraph;
     };
 
+    // Unselect nodes
     dataGraph.unselectNode = function () {
-        unselectNode();
+        if (!animationInProgress)
+            unselectNode();
+        else setTimeout(function() {
+            unselectNode();
+        }, ANIMATION_TIME)
     };
 
+    // Select node
     dataGraph.selectNode = function (id) {
-        selectNode(id);
+        if (!isSelectingEffectActive) return;
+
+        if (!animationInProgress)
+            selectNode(id);
+        else setTimeout(function() {
+            selectNode(id);
+        }, ANIMATION_TIME)
     };
 
-    dataGraph.getXYofNode = function (id) {
+    // Get bounding rectangle of node
+    dataGraph.getRectOfNode = function (id) {
         return getRectOfNode(id);
     };
 
+    // Turn of zoom and view transformation
     dataGraph.setZoom = function (value) {
         if (value) svg.call(zoom);
         else svg.on(".zoom", null);
     };
 
+    // Turn of visual selecting nodes
     dataGraph.setSelectingNodes = function (value) {
         isSelectingEffectActive = value;
     };

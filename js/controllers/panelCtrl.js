@@ -4,27 +4,33 @@
 angular.module("graphEditor")
     .controller("PanelCtrl", PanelCtrl);
 
-function PanelCtrl($scope, data, bus) {
-    $scope.editMode = false;
-    $scope.linkingMode = false;
-    //TODO: Tryby do enuma
+function PanelCtrl($scope, data, bus, stateManager) {
+    $scope.editMode = function() {
+        return stateManager.getCurrentState() === States.nodeEdit;
+    };
+    $scope.linkingMode = function() {
+        return stateManager.getCurrentState() === States.linkingMode;
+    };
 
-    bus.on(Events.nodeSelected, function (id) {
-        activateNode(id);
-        //TODO: $scope.watch ?
-        $scope.$apply();
-    });
+    bus.on(Events.stateChanged, function (stateData) {
+        switch (stateManager.getCurrentState()) {
+            case States.nodeEdit:
+                $scope.activeNode = data.getNode(stateData);
+                $scope.activeNode.id = stateData;
+                break;
 
-    bus.on(Events.nodeUnselected, function() {
-        if ($scope.activeNode) {
-            deactivateNode();
-            $scope.$apply();
+            case States.noSelection:
+                $scope.activeNode = {};
+                break;
+
+            case States.linkingMode:
+                break;
         }
+        if (!$scope.$$phase) $scope.$apply()
     });
 
     $scope.deleteNode = function () {
         data.deleteNode($scope.activeNode.id);
-        deactivateNode();
     };
 
     $scope.addNode = function () {
@@ -32,25 +38,9 @@ function PanelCtrl($scope, data, bus) {
     };
 
     $scope.enterLinkingMode = function () {
-        //TODO: jeżeli nie ma aktywnego elementu to wyjdź
-        $scope.linkingMode = true;
-        bus.emit(Events.enterLinkingMode, $scope.activeNode);
+        if ($scope.activeNode)
+            bus.emit(Events.enterLinkingMode, $scope.activeNode);
+        else
+            console.error("Próba uruchomienia trybu łączenia węzłów bez aktywnego węzła");
     };
-
-    var activateNode = function (id) {
-        $scope.activeNode = data.getNode(id);
-        $scope.activeNode.id = id;
-        $scope.editMode = true;
-    };
-
-    var deactivateNode = function() {
-        $scope.editMode = false;
-        $scope.activeNode = {};
-    };
-
-    var afterAnimation = function(callback) {
-        setTimeout(callback, 500);
-    };
-
-    //TODO: state manager
 }

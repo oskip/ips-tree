@@ -6,7 +6,13 @@ var Events = {
     nodeUnselected: "nodeUnselected",
     dataLoaded: "dataLoaded",
     dataUpdated: "dataUpdated",
-    unselectNode: "unselectNode",
-    selectNode: "selectNode",
-    enterLinkingMode: "enterLinkingMode"
+    enterLinkingMode: "enterLinkingMode",
+    stateChanged: "stateChanged",
+    escapePressed: "escapePressed"
+};
+
+var States = {
+    noSelection: "noSelection",
+    nodeEdit: "nodeEdit",
+    linkingMode: "linkingMode"
 };

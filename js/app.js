@@ -4,7 +4,7 @@
 angular.module("graphEditor", []);
 
 angular.module("graphEditor")
-    .run(function ($q, $http, bus) {
+    .run(function ($q, $http, bus, stateManager) {
         var timeout = function (wait) {
             var q = $q.defer();
             setTimeout(function () {
@@ -12,6 +12,7 @@ angular.module("graphEditor")
             }, wait);
             return q.promise;
         };
+
         //TODO: do serwisu
         $http.get("data.json").success(function(data) {
             bus.emit(Events.dataLoaded, data);
