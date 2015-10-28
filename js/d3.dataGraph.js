@@ -7,12 +7,12 @@ d3 = d3 || {};
 d3.dataGraph = function () {
     var data = {};
 
-    var svg = d3.select("svg"), inner = svg.select("g"),
+    var svg = d3.select("svg#editor-canvas"), inner = svg.select("g#inner");
     // Zoom support
-        zoom = d3.behavior.zoom().on("zoom", function () {
-            inner.attr("transform", "translate(" + d3.event.translate + ")" +
-                "scale(" + d3.event.scale + ")");
-        });
+    zoom = d3.behavior.zoom().on("zoom", function () {
+        inner.attr("transform", "translate(" + d3.event.translate + ")" +
+            "scale(" + d3.event.scale + ")");
+    });
     svg.call(zoom);
 
     // Graph setup
@@ -21,11 +21,12 @@ d3.dataGraph = function () {
     graph.setGraph({
         rankdir: 'lr'
     });
-    graph.graph().transition = function(selection) {
+    graph.graph().transition = function (selection) {
         return selection.transition().duration(500);
     };
 
     var selectedElementId;
+    var isSelectingEffectActive = true;
 
     function updateGraph() {
         if (!graph) return;
@@ -100,6 +101,8 @@ d3.dataGraph = function () {
         // Fade in and fade out
         svg.selectAll(".node")
             .each(function (elId) {
+                if (!isSelectingEffectActive) return;
+
                 if (id != elId) {
                     d3.select(this)
                         .transition()
@@ -119,7 +122,7 @@ d3.dataGraph = function () {
         );
     }
 
-    function unselectNode(dispatch) {
+    function unselectNode() {
         selectedElementId = null;
 
         svg.selectAll(".node")
@@ -129,12 +132,19 @@ d3.dataGraph = function () {
                     .duration(300)
                     .style("opacity", 1);
             });
-        if (dispatch) {
-            // Emit event
-            document.getElementById("graph-editor").dispatchEvent(
-                new CustomEvent(Events.nodeUnselected, {})
-            );
-        }
+        // Emit event
+        document.getElementById("graph-editor").dispatchEvent(
+            new CustomEvent(Events.nodeUnselected, {})
+        );
+    }
+
+    function getRectOfNode(id) {
+        var svgElement = svg.selectAll(".node")
+            .filter(function (index) {
+                return index === id
+            }).node();
+        if (svgElement)
+            return svgElement.getBoundingClientRect();
     }
 
     var dataGraph = {};
@@ -147,9 +157,25 @@ d3.dataGraph = function () {
         return dataGraph;
     };
 
-    // Called from outside, don't dispatch
-    dataGraph.unselectNode = function() {
-        unselectNode(false);
+    dataGraph.unselectNode = function () {
+        unselectNode();
+    };
+
+    dataGraph.selectNode = function (id) {
+        selectNode(id);
+    };
+
+    dataGraph.getXYofNode = function (id) {
+        return getRectOfNode(id);
+    };
+
+    dataGraph.setZoom = function (value) {
+        if (value) svg.call(zoom);
+        else svg.on(".zoom", null);
+    };
+
+    dataGraph.setSelectingNodes = function (value) {
+        isSelectingEffectActive = value;
     };
 
     return dataGraph;

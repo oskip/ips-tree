@@ -21,8 +21,10 @@
   <script src="js/services/bus.js"></script>
   <script src="js/services/data.js"></script>
   <script src="js/controllers/panelCtrl.js"></script>
-  <script src="js/directives/graph.js"></script>
+  <script src="js/controllers/graphCtrl.js"></script>
+  <script src="js/directives/visualLinker.js"></script>
   <script src="js/utils/enums.js"></script>
+  <script src="js/utils/extensions.js"></script>
 </head>
 <body ng-app="graphEditor">
 <div id="graph-editor">
@@ -30,12 +32,19 @@
     <div id="panel" class="row" ng-controller="PanelCtrl">
       <button type="button" ng-if="editMode" ng-click="deleteNode()" class="btn btn-danger"><span
             class="glyphicon glyphicon-trash"></span></button>
+
+      <button type="button" ng-click="addNode()" class="btn btn-success"><span
+            class="glyphicon glyphicon-plus"></span></button>
+
+      <button type="button" ng-if="editMode" ng-click="enterLinkingMode()" class="btn btn-primary">
+        <span class="glyphicon glyphicon-link"></span></button>
     </div>
-    <graph>
-      <svg>
-        <g/>
+    <div id="graph-container" ng-controller="GraphCtrl">
+      <svg id="editor-canvas">
+        <g id="linker-overlay" visual-linker ng-if="linkingMode"></g>
+        <g id="inner"/>
       </svg>
-    </graph>
+    </div>
   </div>
 </div>
 </body>

@@ -3,8 +3,10 @@
  */
 var Events = {
     nodeSelected: "nodeSelected",
+    nodeUnselected: "nodeUnselected",
     dataLoaded: "dataLoaded",
     dataUpdated: "dataUpdated",
     unselectNode: "unselectNode",
-    nodeUnselected: "nodeUnselected"
+    selectNode: "selectNode",
+    enterLinkingMode: "enterLinkingMode"
 };
