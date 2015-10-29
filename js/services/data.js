@@ -1,6 +1,8 @@
 /**
  * Created by Oskar on 2015-10-22.
  */
+"use strict";
+
 angular.module("graphEditor")
     .service("data", DataService);
 
@@ -41,6 +43,11 @@ function DataService(bus) {
         };
         bus.emit(Events.dataUpdated, data);
         return key;
+    };
+
+    this.deleteEdge = function(edgeIndex) {
+        delete data.edges[edgeIndex];
+        bus.emit(Events.dataUpdated, data);
     };
 
     this.getEdgesAdjacentToNode = function(index) {

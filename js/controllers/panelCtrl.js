@@ -42,6 +42,10 @@ function PanelCtrl($scope, data, bus, stateManager) {
         data.addNode();
     };
 
+    $scope.deleteEdge = function(edgeIndex) {
+      data.deleteEdge(edgeIndex);
+    };
+
     $scope.enterLinkingMode = function () {
         if ($scope.activeNode)
             bus.emit(Events.enterLinkingMode, $scope.activeNode);
