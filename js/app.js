@@ -3,8 +3,8 @@
  */
 angular.module("graphEditor", []);
 
-angular.module("graphEditor")
-    .run(function ($q, $http, bus, stateManager) {
+angular.module("graphEditor", ['ui.bootstrap'])
+    .run(function ($q, $http, bus) {
         var timeout = function (wait) {
             var q = $q.defer();
             setTimeout(function () {

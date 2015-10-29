@@ -40,7 +40,7 @@ function StateManager(bus, data) {
     });
 
     bus.on(Events.enterLinkingMode, function(activeNode) {
-        linkedFromNodeId = activeNode.id;
+        linkedFromNodeId = activeNode._index;
         changeCurrentState(States.linkingMode, activeNode);
     });
 

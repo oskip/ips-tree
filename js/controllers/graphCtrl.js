@@ -17,7 +17,7 @@ function GraphController($scope, bus, stateManager) {
         bus.emit(Events.nodeSelected, evData.detail);
     });
 
-    container.on(Events.nodeUnselected, function (data) {
+    container.on(Events.nodeUnselected, function () {
         bus.emit(Events.nodeUnselected);
     });
 
@@ -35,6 +35,15 @@ function GraphController($scope, bus, stateManager) {
         graph.setData(data);
     });
 
+    bus.on(Events.highlightEdge, function(edgeIndex) {
+        graph.unHighlightEdges();
+        graph.highlightEdge(edgeIndex);
+    });
+
+    bus.on(Events.unhighlightEdges, function() {
+        graph.unHighlightEdges();
+    });
+
     // Manage state changes
     bus.on(Events.stateChanged, function (stateData) {
         switch (stateManager.getCurrentState()) {
@@ -48,7 +57,7 @@ function GraphController($scope, bus, stateManager) {
                 break;
 
             case States.linkingMode:
-                var rect = graph.getRectOfNode(stateData.id);
+                var rect = graph.getRectOfNode(stateData._index);
                 if (rect) {
                     $scope.arrowStartX = rect.left + (rect.right - rect.left) / 2;
                     $scope.arrowStartY = rect.top + (rect.bottom - rect.top) / 2;

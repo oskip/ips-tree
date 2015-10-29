@@ -3,12 +3,14 @@
  */
 
 d3 = d3 || {};
+// TODO: Angular constant?
 var ANIMATION_TIME = 500;
+var CUSTOM_ARROW_COLOR = "#999";
 
 d3.dataGraph = function () {
     // Variables
     var data = {};
-    var selectedElementId;
+    var selectedNodeId;
     var isSelectingEffectActive = true;
     var animationInProgress = false;
     var svg = d3.select("svg#editor-canvas"), inner = svg.select("g#inner");
@@ -86,7 +88,7 @@ d3.dataGraph = function () {
 
         inner.call(render, graph);
         animationInProgress = true;
-        setTimeout(function() {
+        setTimeout(function () {
             animationInProgress = false;
         }, ANIMATION_TIME);
 
@@ -96,7 +98,7 @@ d3.dataGraph = function () {
     function appendEvents() {
         svg.selectAll(".node")
             .on("click", function (id) {
-                if (selectedElementId === id) {
+                if (selectedNodeId === id) {
                     // Emit event
                     document.getElementById("graph-editor").dispatchEvent(
                         new CustomEvent(Events.nodeUnselected, {})
@@ -112,34 +114,28 @@ d3.dataGraph = function () {
     }
 
     function selectNode(id) {
-        selectedElementId = id;
+        selectedNodeId = id;
         // Fade in and fade out
         svg.selectAll(".node")
             .each(function (elId) {
                 if (id != elId) {
                     d3.select(this)
-                        .transition()
-                        .duration(300)
-                        .style("opacity", 0.1);
+                        .transition().duration(300).style("opacity", 0.1);
                 }
                 else {
                     d3.select(this)
-                        .transition()
-                        .duration(300)
-                        .style("opacity", 1);
+                        .transition().duration(300).style("opacity", 1);
                 }
             });
     }
 
     function unselectNode() {
-        selectedElementId = null;
+        selectedNodeId = null;
 
         svg.selectAll(".node")
             .each(function () {
                 d3.select(this)
-                    .transition()
-                    .duration(300)
-                    .style("opacity", 1);
+                    .transition().duration(300).style("opacity", 1);
             });
     }
 
@@ -159,7 +155,7 @@ d3.dataGraph = function () {
         data = d;
         draw();
         // No node selected after redraw
-        selectedElementId = null;
+        selectedNodeId = null;
         return dataGraph;
     };
 
@@ -167,7 +163,7 @@ d3.dataGraph = function () {
     dataGraph.unselectNode = function () {
         if (!animationInProgress)
             unselectNode();
-        else setTimeout(function() {
+        else setTimeout(function () {
             unselectNode();
         }, ANIMATION_TIME)
     };
@@ -178,9 +174,23 @@ d3.dataGraph = function () {
 
         if (!animationInProgress)
             selectNode(id);
-        else setTimeout(function() {
+        else setTimeout(function () {
             selectNode(id);
         }, ANIMATION_TIME)
+    };
+
+    dataGraph.highlightEdge = function (edgeIndex) {
+        svg.selectAll(".edgePath").each(function (index) {
+            if (index.name !== edgeIndex) return;
+
+            d3.select(this).classed('highlighted', true);
+        });
+    };
+
+    dataGraph.unHighlightEdges = function() {
+        svg.selectAll(".edgePath").each(function () {
+            d3.select(this).classed('highlighted', false);
+        });
     };
 
     // Get bounding rectangle of node

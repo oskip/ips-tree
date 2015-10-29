@@ -5,6 +5,9 @@ angular.module("graphEditor")
     .controller("PanelCtrl", PanelCtrl);
 
 function PanelCtrl($scope, data, bus, stateManager) {
+    $scope.activeNode = {};
+    $scope.activeNodeEdges = {};
+
     $scope.editMode = function() {
         return stateManager.getCurrentState() === States.nodeEdit;
     };
@@ -16,11 +19,13 @@ function PanelCtrl($scope, data, bus, stateManager) {
         switch (stateManager.getCurrentState()) {
             case States.nodeEdit:
                 $scope.activeNode = data.getNode(stateData);
-                $scope.activeNode.id = stateData;
+                $scope.activeNode._index = stateData;
+                getAdjacentEdgesInfo($scope.activeNode);
                 break;
 
             case States.noSelection:
                 $scope.activeNode = {};
+                $scope.activeNodeEdges = {};
                 break;
 
             case States.linkingMode:
@@ -30,7 +35,7 @@ function PanelCtrl($scope, data, bus, stateManager) {
     });
 
     $scope.deleteNode = function () {
-        data.deleteNode($scope.activeNode.id);
+        data.deleteNode($scope.activeNode._index);
     };
 
     $scope.addNode = function () {
@@ -41,6 +46,23 @@ function PanelCtrl($scope, data, bus, stateManager) {
         if ($scope.activeNode)
             bus.emit(Events.enterLinkingMode, $scope.activeNode);
         else
-            console.error("Próba uruchomienia trybu łączenia węzłów bez aktywnego węzła");
+            console.error("Trying to start linking mode with no node selected");
     };
+
+    $scope.highlightEdge = function(edgeIndex) {
+        bus.emit(Events.highlightEdge, edgeIndex);
+    };
+
+    $scope.unhighlightEdges = function() {
+        bus.emit(Events.unhighlightEdges);
+    };
+
+    function getAdjacentEdgesInfo(node) {
+        var edges = data.getEdgesAdjacentToNode(node._index);
+        edges.forEach(function(edge) {
+            edge.v = data.getNode(edge.v);
+            edge.w = data.getNode(edge.w);
+        });
+        $scope.activeNodeEdges = edges;
+    }
 }

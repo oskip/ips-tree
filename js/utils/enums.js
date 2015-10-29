@@ -8,7 +8,9 @@ var Events = {
     dataUpdated: "dataUpdated",
     enterLinkingMode: "enterLinkingMode",
     stateChanged: "stateChanged",
-    escapePressed: "escapePressed"
+    escapePressed: "escapePressed",
+    highlightEdge: "highlightEdge",
+    unhighlightEdges: "unhighlightEdges"
 };
 
 var States = {

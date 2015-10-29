@@ -1,3 +1,4 @@
+
 #graph-editor .edgePath path {
     stroke: #999;
     stroke-width: 1.5px;
@@ -47,4 +48,14 @@ svg#editor-canvas {
     /*Bootstrap success color*/
     stroke: #999;
     stroke-width: 3;
+}
+
+
+.highlighted > path {
+    stroke: red !important;
+}
+
+.highlighted marker > path {
+    fill: red !important;
+    stroke: red !important;
 }

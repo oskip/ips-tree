@@ -14,6 +14,7 @@
   <script src="bower_components/dagre/dist/dagre.core.js"></script>
   <script src="bower_components/d3/d3.js"></script>
   <script src="bower_components/dagre-d3/dist/dagre-d3.core.js"></script>
+  <script src="bower_components/angular-bootstrap/ui-bootstrap.js"></script>
 
   <!-- App -->
   <script src="js/app.js"></script>
@@ -39,6 +40,23 @@
 
       <button type="button" ng-if="editMode()" ng-click="enterLinkingMode()" class="btn btn-primary">
         <span class="glyphicon glyphicon-link"></span></button>
+
+      <div class="btn-group" uib-dropdown uib-keyboard-nav ng-if="editMode()">
+        <button id="edgesDropdown" type="button" class="btn btn-default" uib-dropdown-toggle>
+          Przejścia dla stanu <span class="caret"></span>
+        </button>
+        <ul class="uib-dropdown-menu" role="menu" aria-labelledby="edgesDropdown">
+          <li ng-repeat="edge in activeNodeEdges" data-edge="{{edge.id}}">
+            <a href="#" ng-mouseenter="highlightEdge(edge._index)" ng-mouseleave="unhighlightEdges()">
+              <button class="btn-xs btn-danger" style="display:inline-block;">
+                <span class="glyphicon glyphicon-trash"></span>
+              </button>
+              <span>Z "{{ edge.v.name }}" do "{{ edge.w.name }}"</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
     </div>
     <div id="graph-container" ng-controller="GraphCtrl">
       <svg id="editor-canvas">

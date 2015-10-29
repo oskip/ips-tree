@@ -15,8 +15,8 @@ function DataService(bus) {
         //TODO: Sprawdzanie czy jest
         delete data.nodes[index];
         // Delete edges adjacent to node
-        _.without(data.edges, function (edge) {
-            return edge.v === index || edge.w === index;
+        data.edges = _.pick(data.edges, function (edge) {
+            return edge.v.toString() !== index && edge.w.toString() !== index;
         });
         bus.emit(Events.dataUpdated, data);
     };
@@ -41,5 +41,17 @@ function DataService(bus) {
         };
         bus.emit(Events.dataUpdated, data);
         return key;
+    };
+
+    this.getEdgesAdjacentToNode = function(index) {
+        var adjacent = [];
+        for (var i in data.edges) {
+            var edge = data.edges[i];
+            if (edge.v.toString() === index || edge.w.toString() === index) {
+                adjacent.push(angular.copy(edge));
+                adjacent.last()._index = i;
+            }
+        }
+        return adjacent;
     }
 }
