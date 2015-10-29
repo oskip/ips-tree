@@ -5,6 +5,7 @@
   <title></title>
   <link rel="stylesheet" href="bower_components/normalize-css/normalize.css"/>
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
+  <link rel="stylesheet" href="bower_components/font-awesome-css/css/font-awesome.css"/>
   <link rel="stylesheet" href="css/style.css"/>
   <!-- Angular -->
   <script src="bower_components/angular/angular.js"></script>
@@ -56,6 +57,8 @@
           </li>
         </ul>
       </div>
+
+      <button class="btn btn-info" ng-if="undoAvaliable()" ng-click="undo()">Cofnij <i class="fa fa-undo"></i></button>
 
     </div>
     <div id="graph-container" ng-controller="GraphCtrl">

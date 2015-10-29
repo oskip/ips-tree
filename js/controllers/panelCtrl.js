@@ -69,4 +69,12 @@ function PanelCtrl($scope, data, bus, stateManager) {
         });
         $scope.activeNodeEdges = edges;
     }
+
+    $scope.undoAvaliable = function() {
+        return data.hasHistory();
+    };
+
+    $scope.undo = function() {
+        data.undoLastChange();
+    }
 }
