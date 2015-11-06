@@ -17,6 +17,11 @@ function PanelCtrl($scope, data, bus, stateManager) {
                 $scope.activeNode = {};
                 $scope.activeNodeEdges = {};
                 break;
+
+            case States.nodeDataEdit:
+                $scope.activeNode = data.getNode(stateData);
+                $scope.activeNode._index = stateData;
+                break;
         }
         if (!$scope.$$phase) $scope.$apply()
     });

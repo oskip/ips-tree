@@ -14,10 +14,6 @@ function DataService(bus, graphConfig) {
         data = loadedData;
     });
 
-    this.getNode = function (index) {
-        //TODO: Sprawdzanie czy jest
-        return data.nodes[index];
-    };
 
     this.addNode = function () {
         saveToHistory();
@@ -26,6 +22,19 @@ function DataService(bus, graphConfig) {
         data.nodes[key] = {name: "Nowy stan"};
         bus.emit(Events.dataUpdated, data);
         return key;
+    };
+
+    this.getNode = function (index) {
+        //TODO: Sprawdzanie czy jest
+        return data.nodes[index];
+    };
+
+    this.updateNode = function (node, index) {
+        if (node && index) {
+            saveToHistory();
+            data.nodes[index] = node;
+            bus.emit(Events.dataUpdated, data);
+        }
     };
 
     this.deleteNode = function (index) {
@@ -59,7 +68,7 @@ function DataService(bus, graphConfig) {
         bus.emit(Events.dataUpdated, data);
     };
 
-    this.getNodeData = function(index) {
+    this.getNodeData = function (index) {
         //TODO Sprawdzenie czy jest
         var node = data.nodes[index];
         if (node.hasOwnProperty(data)) {

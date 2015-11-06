@@ -31,6 +31,7 @@
   <script src="js/services/stateManager.js"></script>
   <script src="js/controllers/panelCtrl.js"></script>
   <script src="js/controllers/graphCtrl.js"></script>
+  <script src="js/controllers/nodeDataCtrl.js"></script>
   <script src="js/directives/visualLinker.js"></script>
   <script src="js/utils/enums.js"></script>
   <script src="js/utils/extensions.js"></script>
@@ -48,7 +49,8 @@
       <button type="button" ng-if="inEditMode()" ng-click="enterLinkingMode()" class="btn btn-primary">
         <span class="glyphicon glyphicon-link"></span></button>
 
-      <button class="btn btn-warning" ng-if="inEditMode()" ng-click="editNodeData()"><i class="fa fa-pencil"></i></button>
+      <button class="btn btn-warning" ng-if="inEditMode()" ng-click="editNodeData()"><i class="fa fa-pencil"></i>
+      </button>
 
       <div class="btn-group" uib-dropdown uib-keyboard-nav ng-if="inEditMode()">
         <button id="edgesDropdown" type="button" class="btn btn-default" uib-dropdown-toggle>
@@ -66,17 +68,36 @@
         </ul>
       </div>
 
-      <button class="btn btn-info" ng-if="isUndoAvaliable()" ng-click="undo()">Cofnij <i class="fa fa-undo"></i></button>
+      <button class="btn btn-info" ng-if="isUndoAvaliable()" ng-click="undo()">Cofnij <i class="fa fa-undo"></i>
+      </button>
 
-      <div layout="column" ng-if="inEditNodeDataMode()" ng-cloak class="node-detail-panel md-whiteframe-3dp">
-        <md-toolbar class="md-active">
-          <div class="md-toolbar-tools">
-            <h2>Nagłówek</h2>
-          </div>
-        </md-toolbar>
-        <md-content flex layout-padding>
-          Tu będzie formularz z danymi węzła
+      <div layout="column" ng-if="inEditNodeDataMode()" ng-cloak ng-controller="NodeDataCtrl"
+           class="md-inline-form node-detail-panel md-whiteframe-3dp">
+
+        <md-content md-theme="docs-dark" layout-padding layout="row">
+          <md-input-container flex>
+            <label>Nazwa stanu</label>
+            <input ng-model="node.name">
+          </md-input-container>
         </md-content>
+
+        <md-content flex layout-padding>
+          <form name="nodeDataForm">
+            <div layout>
+              <md-input-container flex>
+                <label>Jakieś pole</label>
+                <input>
+              </md-input-container>
+            </div>
+          </form>
+        </md-content>
+        <md-content>
+          <div layout="row" layout-align="center center" >
+            <md-button class="md-raised md-primary" ng-click="save()">Zapisz</md-button>
+            <md-button class="md-raised" ng-click="cancel()">Anuluj</md-button>
+          </div>
+        </md-content>
+
       </div>
 
     </div>

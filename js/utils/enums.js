@@ -11,7 +11,8 @@ var Events = {
     escapePressed: "escapePressed",
     highlightEdge: "highlightEdge",
     unhighlightEdges: "unhighlightEdges",
-    enterEditNodeDataMode: "enterEditNodeDataMode"
+    enterEditNodeDataMode: "enterEditNodeDataMode",
+    cancelNodeDataEdit: "cancelNodeDataEdit"
 };
 
 var States = {

@@ -4,10 +4,11 @@ TODO: wyświetlenie okna po wybraniu edycji węzła
 TODO: informacja o tym jak wyjść z trybu łączenia (toast)
 TODO: Komentarze do CSSa
 TODO: animowanie wjazdu widoku detali
-TODO: wydzielenie panelu edycji danych węzła do osobnego kontrolera?
 TODO: Komentarze do stanów i eventów
 TODO: Refaktoring eventów - do angular constant
 TODO: Cofnij tak, żeby nie rozwalało grafu
+TODO: panel edycji danych węzła do osobnego htmla
+TODO: jak działa theming w angular - material
 
 Duże:
 TODO: przebudowa menu - dodaj i cofnij jako FAB na dole ekranu, pozostałe jako FAB przy samym wierzchołku; zablokowanie
@@ -17,6 +18,8 @@ TODO: podpięcie danych pod okno edycji węzła
 TODO: podpięcie danych pod okno edycji krawędzi
 TODO: nauka protractora i testy jednostkowe
 TODO: nauka ngAnimate
-TODO: refaktoring eventów - które z nich da się zastąpić zwykłą metodą StateManagera? (enterLinkingMode, enterNodeDataMode)
+TODO: refaktoring eventów - które z nich da się zastąpić zwykłą metodą StateManagera? (enterLinkingMode, enterNodeDataMode, cancelNodeDataEdit)
+TODO: nauka angular material
 
 Zrobione:
+DONE: wydzielenie panelu edycji danych węzła do osobnego kontrolera?

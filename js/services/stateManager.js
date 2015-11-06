@@ -19,21 +19,21 @@ function StateManager(bus, data) {
         bus.emit(Events.stateChanged, data);
     }
 
-    bus.on(Events.nodeSelected, function (nodeId) {
+    bus.on(Events.nodeSelected, function (nodeIndex) {
         switch (currentState) {
             // Add new edge to node
             case States.linkingMode:
-                data.addEdge(linkedFromNodeId, nodeId);
+                data.addEdge(linkedFromNodeId, nodeIndex);
                 changeCurrentState(States.noSelection);
                 break;
             case States.noSelection:
-                changeCurrentState(States.nodeEdit, nodeId);
+                changeCurrentState(States.nodeEdit, nodeIndex);
                 break;
             case States.nodeEdit:
-                updateStateData(nodeId);
+                updateStateData(nodeIndex);
                 break;
             case States.nodeDataEdit:
-                changeCurrentState(States.nodeEdit, nodeId);
+                changeCurrentState(States.nodeEdit, nodeIndex);
                 break;
         }
     });
@@ -72,8 +72,11 @@ function StateManager(bus, data) {
             changeCurrentState(States.nodeDataEdit, activeNode._index);
     });
 
+    bus.on(Events.cancelNodeDataEdit, function(nodeIndex) {
+        changeCurrentState(States.nodeEdit, nodeIndex);
+    });
+
     this.getCurrentState = function () {
         return currentState;
     }
-
 }
