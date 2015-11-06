@@ -59,3 +59,11 @@ svg#editor-canvas {
     fill: red !important;
     stroke: red !important;
 }
+
+.node-detail-panel {
+    height: 50%;
+    width: 300px;
+    position: fixed;
+    margin-right: 20px;
+    right:0;
+}

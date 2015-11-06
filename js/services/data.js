@@ -59,6 +59,14 @@ function DataService(bus, graphConfig) {
         bus.emit(Events.dataUpdated, data);
     };
 
+    this.getNodeData = function(index) {
+        //TODO Sprawdzenie czy jest
+        var node = data.nodes[index];
+        if (node.hasOwnProperty(data)) {
+            return node.data;
+        }
+    };
+
     this.getEdgesAdjacentToNode = function (index) {
         var adjacent = [];
         for (var i in data.edges) {
@@ -84,6 +92,9 @@ function DataService(bus, graphConfig) {
             console.error("No history for undo action")
     };
 
+    /*
+     Private methods
+     */
     function saveToHistory() {
         if (history.length > graphConfig.historyMax) {
             console.warn("Max history stack exceeded")

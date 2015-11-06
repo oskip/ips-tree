@@ -2,7 +2,27 @@
   "nodes": {
     "1": {
       "name": "Przyjęte zgłoszenie",
-      "type": "STANDARD"
+      "data": {
+        "type": "Standardowy",
+        "isPrivate": true,
+        "color": "c2ea12",
+        "description": "Stan, w którym zgłoszenie zostało przyjęte",
+        "escalations": [
+          {
+            "id": 12,
+            "name": "Powiadomienie o przyjęciu zgłoszenia HD"
+          },
+          {
+            "id": 33,
+            "name": "Powiadomienie o przyjęciu zgłoszenia serwis"
+          }
+        ],
+        "ticketsInState": [
+          "BP-4243",
+          "BP-1241",
+          "BP-1243"
+        ]
+      }
     },
     "2": {
       "name": "Anulowane",

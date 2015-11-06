@@ -5,16 +5,6 @@ angular.module("graphEditor")
     .controller("PanelCtrl", PanelCtrl);
 
 function PanelCtrl($scope, data, bus, stateManager) {
-    $scope.activeNode = {};
-    $scope.activeNodeEdges = {};
-
-    $scope.editMode = function() {
-        return stateManager.getCurrentState() === States.nodeEdit;
-    };
-    $scope.linkingMode = function() {
-        return stateManager.getCurrentState() === States.linkingMode;
-    };
-
     bus.on(Events.stateChanged, function (stateData) {
         switch (stateManager.getCurrentState()) {
             case States.nodeEdit:
@@ -27,12 +17,22 @@ function PanelCtrl($scope, data, bus, stateManager) {
                 $scope.activeNode = {};
                 $scope.activeNodeEdges = {};
                 break;
-
-            case States.linkingMode:
-                break;
         }
         if (!$scope.$$phase) $scope.$apply()
     });
+
+    $scope.activeNode = {};
+    $scope.activeNodeEdges = {};
+
+    $scope.inEditMode = function () {
+        return stateManager.getCurrentState() === States.nodeEdit;
+    };
+    $scope.inEditNodeDataMode = function () {
+        return stateManager.getCurrentState() === States.nodeDataEdit;
+    };
+    $scope.linkingMode = function () {
+        return stateManager.getCurrentState() === States.linkingMode;
+    };
 
     $scope.deleteNode = function () {
         data.deleteNode($scope.activeNode._index);
@@ -42,39 +42,51 @@ function PanelCtrl($scope, data, bus, stateManager) {
         data.addNode();
     };
 
-    $scope.deleteEdge = function(edgeIndex) {
-      data.deleteEdge(edgeIndex);
+    $scope.deleteEdge = function (edgeIndex) {
+        data.deleteEdge(edgeIndex);
     };
 
     $scope.enterLinkingMode = function () {
-        if ($scope.activeNode)
-            bus.emit(Events.enterLinkingMode, $scope.activeNode);
-        else
+        if (!$scope.activeNode) {
             console.error("Trying to start linking mode with no node selected");
+            return;
+        }
+        bus.emit(Events.enterLinkingMode, $scope.activeNode);
     };
 
-    $scope.highlightEdge = function(edgeIndex) {
+    $scope.editNodeData = function () {
+        if (!$scope.activeNode || !$scope.inEditMode())
+            console.error("Trying to edit node data with no node selected");
+        //TODO: Sprawdź czy są zmiany wiszące i wyświetl potwierdzenie
+        else
+            bus.emit(Events.enterEditNodeDataMode, $scope.activeNode);
+    };
+
+    $scope.highlightEdge = function (edgeIndex) {
         bus.emit(Events.highlightEdge, edgeIndex);
     };
 
-    $scope.unhighlightEdges = function() {
+    $scope.unhighlightEdges = function () {
         bus.emit(Events.unhighlightEdges);
     };
 
+    $scope.isUndoAvaliable = function () {
+        return data.hasHistory();
+    };
+
+    $scope.undo = function () {
+        data.undoLastChange();
+    };
+
+    /*
+     Private methods
+     */
     function getAdjacentEdgesInfo(node) {
         var edges = data.getEdgesAdjacentToNode(node._index);
-        edges.forEach(function(edge) {
+        edges.forEach(function (edge) {
             edge.v = data.getNode(edge.v);
             edge.w = data.getNode(edge.w);
         });
         $scope.activeNodeEdges = edges;
-    }
-
-    $scope.undoAvaliable = function() {
-        return data.hasHistory();
-    };
-
-    $scope.undo = function() {
-        data.undoLastChange();
     }
 }

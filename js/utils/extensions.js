@@ -15,8 +15,8 @@ String.prototype.hashCode = function () {
 var newHash = function (n) {
     if (!n) n = 10;
     return Math.random().toString(36).substring(2, n + 2);
-}
+};
 
 Array.prototype.last = function() {
     return this[this.length-1];
-}
+};

@@ -10,11 +10,13 @@ var Events = {
     stateChanged: "stateChanged",
     escapePressed: "escapePressed",
     highlightEdge: "highlightEdge",
-    unhighlightEdges: "unhighlightEdges"
+    unhighlightEdges: "unhighlightEdges",
+    enterEditNodeDataMode: "enterEditNodeDataMode"
 };
 
 var States = {
     noSelection: "noSelection",
     nodeEdit: "nodeEdit",
-    linkingMode: "linkingMode"
+    linkingMode: "linkingMode",
+    nodeDataEdit: "nodeDataEdit"
 };

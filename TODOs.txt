@@ -1,13 +1,22 @@
 Małe:
-- zablokowanie możliwości dodania drugiej takiej samej krawędzi do wierzchołka
-- wyświetlenie okna po wybraniu edycji węzła
+TODO: zablokowanie możliwości dodania drugiej takiej samej krawędzi do wierzchołka
+TODO: wyświetlenie okna po wybraniu edycji węzła
+TODO: informacja o tym jak wyjść z trybu łączenia (toast)
+TODO: Komentarze do CSSa
+TODO: animowanie wjazdu widoku detali
+TODO: wydzielenie panelu edycji danych węzła do osobnego kontrolera?
+TODO: Komentarze do stanów i eventów
+TODO: Refaktoring eventów - do angular constant
+TODO: Cofnij tak, żeby nie rozwalało grafu
 
 Duże:
-- przebudowa menu - dodaj i cofnij jako FAB na dole ekranu, pozostałe jako FAB przy samym wierzchołku; zablokowanie
- przesuwania i zoomowania
-- dodanie do menu listy z której będzie można edytować i usuwać krawędzie przy węźle,
-- podpięcie danych pod okno edycji węzła
-- podpięcie danych pod okno edycji krawędzi
-- nauka protractora i testy jednostkowe
+TODO: przebudowa menu - dodaj i cofnij jako FAB na dole ekranu, pozostałe jako FAB przy samym wierzchołku; zablokowanie
+TODO: przesuwania i zoomowania
+TODO: dodanie do menu listy z której będzie można edytować i usuwać krawędzie przy węźle,
+TODO: podpięcie danych pod okno edycji węzła
+TODO: podpięcie danych pod okno edycji krawędzi
+TODO: nauka protractora i testy jednostkowe
+TODO: nauka ngAnimate
+TODO: refaktoring eventów - które z nich da się zastąpić zwykłą metodą StateManagera? (enterLinkingMode, enterNodeDataMode)
 
 Zrobione:

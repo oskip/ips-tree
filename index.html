@@ -4,17 +4,23 @@
   <meta charset="UTF-8">
   <title></title>
   <link rel="stylesheet" href="bower_components/normalize-css/normalize.css"/>
+  <!-- Do wyrzucenia po przejściu na angular-material -->
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
   <link rel="stylesheet" href="bower_components/font-awesome-css/css/font-awesome.css"/>
+  <link rel="stylesheet" href="bower_components/angular-material/angular-material.css"/>
   <link rel="stylesheet" href="css/style.css"/>
   <!-- Angular -->
   <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-animate/angular-animate.js"></script>
+  <script src="bower_components/angular-aria/angular-aria.js"></script>
+  <script src="bower_components/angular-material/angular-material.js"></script>
   <!-- Dagre d3 -->
   <script src="bower_components/lodash/lodash.min.js"></script>
   <script src="bower_components/graphlib/dist/graphlib.core.js"></script>
   <script src="bower_components/dagre/dist/dagre.core.js"></script>
   <script src="bower_components/d3/d3.js"></script>
   <script src="bower_components/dagre-d3/dist/dagre-d3.core.js"></script>
+  <!-- Do wyrzucenia po przejściu na angular-material -->
   <script src="bower_components/angular-bootstrap/ui-bootstrap.js"></script>
 
   <!-- App -->
@@ -33,16 +39,18 @@
 <div id="graph-editor">
   <div class="container-fluid">
     <div id="panel" class="row" ng-controller="PanelCtrl">
-      <button type="button" ng-if="editMode()" ng-click="deleteNode()" class="btn btn-danger"><span
+      <button type="button" ng-if="inEditMode()" ng-click="deleteNode()" class="btn btn-danger"><span
             class="glyphicon glyphicon-trash"></span></button>
 
       <button type="button" ng-click="addNode()" class="btn btn-success"><span
             class="glyphicon glyphicon-plus"></span></button>
 
-      <button type="button" ng-if="editMode()" ng-click="enterLinkingMode()" class="btn btn-primary">
+      <button type="button" ng-if="inEditMode()" ng-click="enterLinkingMode()" class="btn btn-primary">
         <span class="glyphicon glyphicon-link"></span></button>
 
-      <div class="btn-group" uib-dropdown uib-keyboard-nav ng-if="editMode()">
+      <button class="btn btn-warning" ng-if="inEditMode()" ng-click="editNodeData()"><i class="fa fa-pencil"></i></button>
+
+      <div class="btn-group" uib-dropdown uib-keyboard-nav ng-if="inEditMode()">
         <button id="edgesDropdown" type="button" class="btn btn-default" uib-dropdown-toggle>
           Przejścia dla stanu <span class="caret"></span>
         </button>
@@ -58,10 +66,21 @@
         </ul>
       </div>
 
-      <button class="btn btn-info" ng-if="undoAvaliable()" ng-click="undo()">Cofnij <i class="fa fa-undo"></i></button>
+      <button class="btn btn-info" ng-if="isUndoAvaliable()" ng-click="undo()">Cofnij <i class="fa fa-undo"></i></button>
+
+      <div layout="column" ng-if="inEditNodeDataMode()" ng-cloak class="node-detail-panel md-whiteframe-3dp">
+        <md-toolbar class="md-active">
+          <div class="md-toolbar-tools">
+            <h2>Nagłówek</h2>
+          </div>
+        </md-toolbar>
+        <md-content flex layout-padding>
+          Tu będzie formularz z danymi węzła
+        </md-content>
+      </div>
 
     </div>
-    <div id="graph-container" ng-controller="GraphCtrl">
+    <div id="graph-container" ng-controller="GraphCtrl" ng-cloak>
       <svg id="editor-canvas">
         <g id="linker-overlay" visual-linker ng-if="linkingMode()"></g>
         <g id="inner"/>

@@ -12,7 +12,9 @@ function GraphController($scope, bus, stateManager) {
         return stateManager.getCurrentState() === States.linkingMode;
     };
 
-    // Pass events to Angular's bus
+    /*
+     Pass events to Angular's bus
+     */
     container.on(Events.nodeSelected, function (evData) {
         bus.emit(Events.nodeSelected, evData.detail);
     });
@@ -21,12 +23,14 @@ function GraphController($scope, bus, stateManager) {
         bus.emit(Events.nodeUnselected);
     });
 
-    document.onkeyup = (function(evData) {
+    document.onkeyup = (function (evData) {
         if (evData.keyCode !== 27) return; //ESC
         bus.emit(Events.escapePressed, {});
     });
 
-    // Pass events from Angular's bus
+    /*
+     Pass events from Angular's bus
+     */
     bus.on(Events.dataLoaded, function (data) {
         graph.setData(data);
     });
@@ -35,12 +39,12 @@ function GraphController($scope, bus, stateManager) {
         graph.setData(data);
     });
 
-    bus.on(Events.highlightEdge, function(edgeIndex) {
+    bus.on(Events.highlightEdge, function (edgeIndex) {
         graph.unHighlightEdges();
         graph.highlightEdge(edgeIndex);
     });
 
-    bus.on(Events.unhighlightEdges, function() {
+    bus.on(Events.unhighlightEdges, function () {
         graph.unHighlightEdges();
     });
 
@@ -66,6 +70,10 @@ function GraphController($scope, bus, stateManager) {
                     //TODO: Obsługa błędu
                 }
                 setZoomAndSelect(false);
+                break;
+
+            case States.nodeDataEdit:
+                graph.selectNode(stateData);
                 break;
         }
         if (!$scope.$$phase) $scope.$apply();
