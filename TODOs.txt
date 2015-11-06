@@ -1,0 +1,13 @@
+Małe:
+- zablokowanie możliwości dodania drugiej takiej samej krawędzi do wierzchołka
+- wyświetlenie okna po wybraniu edycji węzła
+
+Duże:
+- przebudowa menu - dodaj i cofnij jako FAB na dole ekranu, pozostałe jako FAB przy samym wierzchołku; zablokowanie
+ przesuwania i zoomowania
+- dodanie do menu listy z której będzie można edytować i usuwać krawędzie przy węźle,
+- podpięcie danych pod okno edycji węzła
+- podpięcie danych pod okno edycji krawędzi
+- nauka protractora i testy jednostkowe
+
+Zrobione:
