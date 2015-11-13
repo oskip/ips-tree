@@ -83,6 +83,13 @@ function PanelCtrl($scope, data, bus, stateManager) {
         data.undoLastChange();
     };
 
+    var openMenuOriginatorEvent;
+
+    $scope.openEdgesMenu = function($mdOpenMenu, ev) {
+        openMenuOriginatorEvent = ev;
+        $mdOpenMenu(ev);
+    };
+
     /*
      Private methods
      */

@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <title></title>
-  <link rel="stylesheet" href="bower_components/normalize-css/normalize.css"/>
-  <!-- Do wyrzucenia po przejściu na angular-material -->
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
-  <link rel="stylesheet" href="bower_components/font-awesome-css/css/font-awesome.css"/>
+  <link rel="stylesheet" href="css/roboto.css">
+  <link rel="stylesheet" href="css/open-sans.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="bower_components/angular-material/angular-material.css"/>
   <link rel="stylesheet" href="css/style.css"/>
   <!-- Angular -->
@@ -20,9 +19,6 @@
   <script src="bower_components/dagre/dist/dagre.core.js"></script>
   <script src="bower_components/d3/d3.js"></script>
   <script src="bower_components/dagre-d3/dist/dagre-d3.core.js"></script>
-  <!-- Do wyrzucenia po przejściu na angular-material -->
-  <script src="bower_components/angular-bootstrap/ui-bootstrap.js"></script>
-
   <!-- App -->
   <script src="js/app.js"></script>
   <script src="js/d3.dataGraph.js"></script>
@@ -38,72 +34,123 @@
 </head>
 <body ng-app="graphEditor">
 <div id="graph-editor">
-  <div class="container-fluid">
-    <div id="panel" class="row" ng-controller="PanelCtrl">
-      <button type="button" ng-if="inEditMode()" ng-click="deleteNode()" class="btn btn-danger"><span
-            class="glyphicon glyphicon-trash"></span></button>
+  <div class="container-fluid" ng-controller="PanelCtrl">
 
-      <button type="button" ng-click="addNode()" class="btn btn-success"><span
-            class="glyphicon glyphicon-plus"></span></button>
+    <!-- Add node button -->
+    <md-button ng-click="addNode()" aria-label="Dodaj węzeł" class="md-fab md-fab-bottom-right md-primary">
+      <i class="material-icons middle">add</i>
+      <md-tooltip md-direction="top">
+        Dodaj nowy stan
+      </md-tooltip>
+    </md-button>
 
-      <button type="button" ng-if="inEditMode()" ng-click="enterLinkingMode()" class="btn btn-primary">
-        <span class="glyphicon glyphicon-link"></span></button>
+    <!-- Undo button-->
+    <md-button ng-disabled="!isUndoAvaliable()" ng-click="undo()"
+               class="md-fab md-fab-bottom-right undo-button md-disabled">
+      <i class="material-icons middle">undo</i>
+      <md-tooltip ng-if="isUndoAvaliable()" md-direction="top">
+        Cofnij
+      </md-tooltip>
+    </md-button>
 
-      <button class="btn btn-warning" ng-if="inEditMode()" ng-click="editNodeData()"><i class="fa fa-pencil"></i>
-      </button>
-
-      <div class="btn-group" uib-dropdown uib-keyboard-nav ng-if="inEditMode()">
-        <button id="edgesDropdown" type="button" class="btn btn-default" uib-dropdown-toggle>
-          Przejścia dla stanu <span class="caret"></span>
-        </button>
-        <ul class="uib-dropdown-menu" role="menu" aria-labelledby="edgesDropdown">
-          <li ng-repeat="edge in activeNodeEdges" data-edge="{{edge.id}}">
-            <a href="#" ng-mouseenter="highlightEdge(edge._index)" ng-mouseleave="unhighlightEdges()">
-              <button class="btn-xs btn-danger" ng-click="deleteEdge(edge._index)">
-                <span class="glyphicon glyphicon-trash"></span>
-              </button>
+    <md-toolbar ng-if="inEditMode()" id="node-edit-toolbar" style="height:48px">
+      <div class="md-toolbar-tools">
+        <!-- Delete node button -->
+        <md-button ng-click="deleteNode()" class="md-icon-button md-button">
+          <md-icon class="material-icons">delete</md-icon>
+          <md-tooltip md-direction="bottom">
+            Usuń stan "{{ activeNode.name }}"
+          </md-tooltip>
+        </md-button>
+        <!-- Enter linking mode button -->
+        <md-button ng-click="enterLinkingMode()" class="md-icon-button md-button">
+          <md-icon class="material-icons">link</md-icon>
+          <md-tooltip md-direction="bottom">
+            Dodaj nowe przejście ze stanu
+          </md-tooltip>
+        </md-button>
+        <!-- Edit node data button -->
+        <md-button class="md-icon-button md-button" ng-click="editNodeData()">
+          <md-icon class="material-icons">mode_edit</md-icon>
+          <md-tooltip md-direction="bottom">
+            Edytuj stan "{{ activeNode.name }}"
+          </md-tooltip>
+        </md-button>
+        <!-- Choose edge from node -->
+        <md-menu md-offset="0 66">
+          <md-button class="md-button" ng-click="openEdgesMenu($mdOpenMenu, $event)">
+            Przejścia ze stanu
+            <md-icon class="material-icons">arrow_drop_down</md-icon>
+          </md-button>
+          <md-menu-content width="4">
+            <md-menu-item ng-repeat="edge in activeNodeEdges" ng-mouseenter="highlightEdge(edge._index)"
+                          ng-mouseleave="unhighlightEdges()">
               <span>Z "{{ edge.v.name }}" do "{{ edge.w.name }}"</span>
-            </a>
-          </li>
-        </ul>
+              <md-button class="md-icon-button">
+                <md-icon class="material-icons">mode_edit</md-icon>
+              </md-button>
+              <md-button class="md-icon-button">
+                <md-icon class="material-icons" ng-click="deleteEdge(edge._index)">delete</md-icon>
+              </md-button>
+            </md-menu-item>
+          </md-menu-content>
+        </md-menu>
       </div>
+    </md-toolbar>
 
-      <button class="btn btn-info" ng-if="isUndoAvaliable()" ng-click="undo()">Cofnij <i class="fa fa-undo"></i>
-      </button>
 
-      <div layout="column" ng-if="inEditNodeDataMode()" ng-cloak ng-controller="NodeDataCtrl"
-           class="md-inline-form node-detail-panel md-whiteframe-3dp">
+    <!--<button class="btn btn-warning" ng-if="inEditMode()" ng-click="editNodeData()"><i class="fa fa-pencil"></i>-->
+    <!--</button>-->
 
-        <md-content md-theme="docs-dark" layout-padding layout="row">
-          <md-input-container flex>
-            <label>Nazwa stanu</label>
-            <input ng-model="node.name">
-          </md-input-container>
-        </md-content>
+    <!--<div class="btn-group" uib-dropdown uib-keyboard-nav ng-if="inEditMode()">-->
+    <!--<button id="edgesDropdown" type="button" class="btn btn-default" uib-dropdown-toggle>-->
+    <!--Przejścia dla stanu <span class="caret"></span>-->
+    <!--</button>-->
+    <!--<ul class="uib-dropdown-menu" role="menu" aria-labelledby="edgesDropdown">-->
+    <!--<li ng-repeat="edge in activeNodeEdges" data-edge="{{edge.id}}">-->
+    <!--<a href="#" ng-mouseenter="highlightEdge(edge._index)" ng-mouseleave="unhighlightEdges()">-->
+    <!--<button class="btn-xs btn-danger" ng-click="deleteEdge(edge._index)">-->
+    <!--<span class="glyphicon glyphicon-trash"></span>-->
+    <!--</button>-->
+    <!--<span>Z "{{ edge.v.name }}" do "{{ edge.w.name }}"</span>-->
+    <!--</a>-->
+    <!--</li>-->
+    <!--</ul>-->
+    <!--</div>-->
 
-        <md-content flex layout-padding>
-          <form name="nodeDataForm">
-            <div layout>
-              <md-input-container flex>
-                <label>Jakieś pole</label>
-                <input>
-              </md-input-container>
-            </div>
-          </form>
-        </md-content>
-        <md-content>
-          <div layout="row" layout-align="center center" >
-            <md-button class="md-raised md-primary" ng-click="save()">Zapisz</md-button>
-            <md-button class="md-raised" ng-click="cancel()">Anuluj</md-button>
+    <!-- Node data editor-->
+    <div layout="column" ng-if="inEditNodeDataMode()" ng-cloak ng-controller="NodeDataCtrl"
+         class="md-inline-form node-detail-panel md-whiteframe-3dp">
+
+      <md-content md-theme="docs-dark" layout-padding layout="row">
+        <md-input-container flex>
+          <label>Nazwa stanu</label>
+          <input ng-model="node.name">
+        </md-input-container>
+      </md-content>
+
+      <md-content flex layout-padding>
+        <form name="nodeDataForm">
+          <div layout>
+            <md-input-container flex>
+              <label>Jakieś pole</label>
+              <input>
+            </md-input-container>
           </div>
-        </md-content>
-
-      </div>
-
+        </form>
+      </md-content>
+      <md-content>
+        <div layout="row" layout-align="center center">
+          <md-button class="md-raised md-primary" ng-click="save()">Zapisz</md-button>
+          <md-button class="md-raised" ng-click="cancel()">Anuluj</md-button>
+        </div>
+      </md-content>
     </div>
-    <div id="graph-container" ng-controller="GraphCtrl" ng-cloak>
+    <!--</div>-->
+
+    <div id="graph-container" ng-controller="GraphCtrl as graph" ng-cloak>
       <svg id="editor-canvas">
-        <g id="linker-overlay" visual-linker ng-if="linkingMode()"></g>
+        <g id="linker-overlay" visual-linker ng-if="graph.isLinkingMode()"></g>
         <g id="inner"/>
       </svg>
     </div>

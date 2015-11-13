@@ -5,10 +5,11 @@ angular.module('graphEditor')
     .controller('GraphCtrl', GraphController);
 
 function GraphController($scope, bus, stateManager) {
+    var self = this;
     var graph = d3.dataGraph();
     var container = angular.element(document.getElementById("graph-editor"));
 
-    $scope.linkingMode = function () {
+    self.isLinkingMode = function () {
         return stateManager.getCurrentState() === States.linkingMode;
     };
 

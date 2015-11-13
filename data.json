@@ -18,10 +18,20 @@
           }
         ],
         "ticketsInState": [
-          "BP-4243",
-          "BP-1241",
-          "BP-1243"
-        ]
+          {
+            "number": "BP-4243",
+            "title": "Urwany dyngs"
+          },
+          {
+            "number": "BP-1241",
+            "title": "Niedziałający teges"
+          },
+          {
+            "number": "BP-1243",
+            "title": "Poluzowany adapter"
+          }
+        ],
+        "ticketsMoreToLoad": false
       }
     },
     "2": {

@@ -6,7 +6,7 @@
 }
 
 body {
-    background: #bbb;
+    background: #ddd;
     bottom: 0;
     height: 100%;
     left: 0;
@@ -32,20 +32,22 @@ svg#editor-canvas {
 }
 
 .node {
-    color: #000066;
+    text-align: center;
+}
+.node-body {
+    color: white;
     cursor: pointer;
-    font: 300 20px/30px "Lato", sans-serif;
+    font: 300 20px/30px "Roboto", sans-serif;
     letter-spacing: .1em;
     text-transform: uppercase;
 }
 
 #panel {
-    position: fixed;
+    position: static;
     top: 0;
 }
 
 #linker-line {
-    /*Bootstrap success color*/
     stroke: #999;
     stroke-width: 3;
 }
@@ -64,6 +66,20 @@ svg#editor-canvas {
     height: 50%;
     width: 300px;
     position: fixed;
+    top: 30px;
     margin-right: 20px;
     right:0;
+}
+
+.middle {
+    vertical-align: middle;
+}
+
+.undo-button {
+    margin-right: 80px;
+}
+
+#node-edit-toolbar {
+    position: absolute;
+    top: 0;
 }

@@ -9,10 +9,10 @@ TODO: Refaktoring eventów - do angular constant
 TODO: Cofnij tak, żeby nie rozwalało grafu
 TODO: panel edycji danych węzła do osobnego htmla
 TODO: jak działa theming w angular - material
+TODO: poprawka podświetlenia pierwszego elementu w menu "przejścia ze stanu"
 
 Duże:
-TODO: przebudowa menu - dodaj i cofnij jako FAB na dole ekranu, pozostałe jako FAB przy samym wierzchołku; zablokowanie
-TODO: przesuwania i zoomowania
+TODO: przebudowa menu - dodaj i cofnij jako FAB na dole ekranu, pozostałe jako FAB przy samym wierzchołku; zablokowanie przesuwania i zoomowania
 TODO: dodanie do menu listy z której będzie można edytować i usuwać krawędzie przy węźle,
 TODO: podpięcie danych pod okno edycji węzła
 TODO: podpięcie danych pod okno edycji krawędzi
@@ -20,6 +20,7 @@ TODO: nauka protractora i testy jednostkowe
 TODO: nauka ngAnimate
 TODO: refaktoring eventów - które z nich da się zastąpić zwykłą metodą StateManagera? (enterLinkingMode, enterNodeDataMode, cancelNodeDataEdit)
 TODO: nauka angular material
+TODO: refactor kontrolerów - składnia controller as
 
 Zrobione:
 DONE: wydzielenie panelu edycji danych węzła do osobnego kontrolera?

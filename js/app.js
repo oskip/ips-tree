@@ -3,7 +3,7 @@
  */
 angular.module("graphEditor", []);
 
-angular.module("graphEditor", ['ui.bootstrap', 'ngMaterial'])
+angular.module("graphEditor", ['ngMaterial'])
     .run(function ($q, $http, bus) {
         var timeout = function (wait) {
             var q = $q.defer();
@@ -27,7 +27,6 @@ angular.module("graphEditor", ['ui.bootstrap', 'ngMaterial'])
         $mdThemingProvider.theme('docs-dark', 'default')
             .primaryPalette('yellow')
             .dark();
-
     });
 
 
